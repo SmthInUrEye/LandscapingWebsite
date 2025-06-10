@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JBD Club - Профессиональное озеленение территории</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="logo">JBD Club</div>
+        <nav>
+            <ul>
+                <li><a href="#services">Услуги</a></li>
+                <li><a href="#portfolio">Портфолио</a></li>
+                <li><a href="#about">О нас</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
+        </nav>
+        <div class="phone">+7 (926) 536-09-46</div>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="container">
+        <h1>Профессиональное озеленение вашей территории</h1>
+        <p>Создаем красивые и экологичные пространства с 2010 года</p>
+        <button id="cta-button" class="btn">Заказать консультацию</button>
+    </div>
+</section>
+
+<section id="services" class="services">
+    <div class="container">
+        <h2>Наши услуги</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <img src="images/landscaping.jpg" alt="Ландшафтный дизайн">
+                <h3>Ландшафтный дизайн</h3>
+                <p>Разработка индивидуальных проектов под ваш участок</p>
+            </div>
+            <div class="service-card">
+                <img src="images/planting.jpg" alt="Посадка растений">
+                <h3>Посадка растений</h3>
+                <p>Подбор и посадка деревьев, кустарников, цветников</p>
+            </div>
+            <div class="service-card">
+                <img src="images/lawn.jpg" alt="Газоны">
+                <h3>Устройство газонов</h3>
+                <p>Рулонные и посевные газоны любого типа</p>
+            </div>
+            <div class="service-card">
+                <img src="images/trees.jpg" alt="Деревья">
+                <h3>Обработка деревьев</h3>
+                <p>Обрезка, обработка, утепление </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="portfolio" class="portfolio">
+    <div class="container">
+        <h2>Наши работы</h2>
+        <div class="portfolio-grid" id="portfolio-grid">
+            <!-- Здесь будут добавляться работы через JavaScript -->
+        </div>
+    </div>
+</section>
+
+<section id="about" class="about">
+    <div class="container">
+        <h2>О компании</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <p>Компания JBD Club уже более 10 лет создает красивые и функциональные зеленые пространства.</p>
+                <p>Наша команда профессионалов поможет реализовать любые ваши идеи по благоустройству территории.</p>
+                <p>Мы используем только качественные материалы и растения, гарантируем долговечность наших работ.</p>
+            </div>
+            <div class="about-image">
+                <img src="images/team.jpg" alt="Наша команда">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="contact">
+    <div class="container">
+        <h2>Свяжитесь с нами</h2>
+        <form id="contact-form">
+            <input type="text" placeholder="Ваше имя" required>
+            <input type="tel" placeholder="Телефон" required>
+            <input type="email" placeholder="Email">
+            <textarea placeholder="Сообщение"></textarea>
+            <button type="submit" class="btn">Отправить</button>
+        </form>
+        <div class="contact-info">
+            <p>Телефон:</p>
+            <p> +7 (968) 536-09-46</p>
+            <p> +7 (926) 536-09-46</p>
+            <p>Email: info@jbdclub.ru</p>
+            <p>Адрес: г. Белоозерский </p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-logo">JBD Club</div>
+            <div class="footer-links">
+                <a href="#services">Услуги</a>
+                <a href="#portfolio">Портфолио</a>
+                <a href="#about">О нас</a>
+                <a href="#contact">Контакты</a>
+            </div>
+            <div class="social-links">
+                <a href="#"><img src="images/instagram.png" alt="Instagram"></a>
+                <a href="#"><img src="images/facebook.png" alt="Facebook"></a>
+                <a href="#"><img src="images/vk.png" alt="VK"></a>
+            </div>
+        </div>
+        <div class="copyright">© 2025 JBD Club. Все права защищены.</div>
+    </div>
+</footer>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Заказать консультацию</h2>
+        <form id="consult-form">
+            <input type="text" placeholder="Ваше имя" required>
+            <input type="tel" placeholder="Телефон" required>
+            <button type="submit" class="btn">Отправить</button>
+        </form>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
