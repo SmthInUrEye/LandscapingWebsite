@@ -215,7 +215,7 @@ nav ul li a:hover {
 }
 
 .about-text {
-    flex: 1;
+    flex: 3;
 }
 
 .about-text p {
@@ -227,8 +227,8 @@ nav ul li a:hover {
 }
 
 .about-image img {
-    width: 100%;
-    border-radius: 8px;
+    width: 250%;
+    border-radius: 10px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 
@@ -273,7 +273,7 @@ nav ul li a:hover {
 
 /* Подвал */
 footer {
-    background-color: #333;
+    background-color: #4B3F31;
     color: white;
     padding: 40px 0 20px;
 }
