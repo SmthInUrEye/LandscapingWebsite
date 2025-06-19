@@ -367,6 +367,51 @@ footer {
     font-size: 16px;
 }
 
+/* Окно уведомлений */
+
+  .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      max-width: 350px;
+      transition: all 0.3s ease;
+    }
+
+    .notification.hidden {
+      opacity: 0;
+      transform: translateX(100%);
+      visibility: hidden;
+    }
+
+    .notification-content {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 16px 24px;
+      position: relative;
+      border-left: 4px solid;
+    }
+
+    .notification.success {
+      border-color: #4CAF50;
+    }
+
+    .notification.error {
+      border-color: #f44336;
+    }
+
+    .notification-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: #888;
+    }
+
 /* Адаптивность */
 @media (max-width: 768px) {
     header .container {
