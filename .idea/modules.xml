@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LandscapingWebsite.iml" filepath="$PROJECT_DIR$/LandscapingWebsite.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/LandScaping_WebSite.iml" filepath="$PROJECT_DIR$/backend/LandScaping_WebSite.iml" />
+      <module fileurl="file://$PROJECT_DIR$/frontend/LandscapingWebsite.iml" filepath="$PROJECT_DIR$/frontend/LandscapingWebsite.iml" />
     </modules>
   </component>
 </project>

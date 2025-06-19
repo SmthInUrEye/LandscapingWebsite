@@ -215,7 +215,7 @@ nav ul li a:hover {
 }
 
 .about-text {
-    flex: 1;
+    flex: 2;
 }
 
 .about-text p {
@@ -227,8 +227,9 @@ nav ul li a:hover {
 }
 
 .about-image img {
-    width: 100%;
-    border-radius: 8px;
+    width: 400px;
+    height: 140px;
+    border-radius: 10px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 
@@ -273,7 +274,7 @@ nav ul li a:hover {
 
 /* Подвал */
 footer {
-    background-color: #333;
+    background-color: #4B3F31;
     color: white;
     padding: 40px 0 20px;
 }
@@ -365,6 +366,51 @@ footer {
     border-radius: 4px;
     font-size: 16px;
 }
+
+/* Окно уведомлений */
+
+  .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      max-width: 350px;
+      transition: all 0.3s ease;
+    }
+
+    .notification.hidden {
+      opacity: 0;
+      transform: translateX(100%);
+      visibility: hidden;
+    }
+
+    .notification-content {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 16px 24px;
+      position: relative;
+      border-left: 4px solid;
+    }
+
+    .notification.success {
+      border-color: #4CAF50;
+    }
+
+    .notification.error {
+      border-color: #f44336;
+    }
+
+    .notification-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: #888;
+    }
 
 /* Адаптивность */
 @media (max-width: 768px) {

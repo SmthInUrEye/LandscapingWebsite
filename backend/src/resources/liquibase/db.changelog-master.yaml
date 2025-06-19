@@ -1,0 +1,3 @@
+databaseChangeLog:
+  - include:
+      file: liquibase/create-consultation-tasks-table.yaml
