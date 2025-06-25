@@ -88,10 +88,10 @@
     <div class="container">
         <h2>Свяжитесь с нами</h2>
         <form id="contact-form">
-            <input type="text" placeholder="Ваше имя" required>
-            <input type="tel" placeholder="Телефон" required>
-            <input type="email" placeholder="Email">
-            <textarea placeholder="Сообщение"></textarea>
+            <input type="text" name="userName" placeholder="Ваше имя" required>
+            <input type="tel" name="rawPhoneNumber" placeholder="Телефон" required>
+            <input type="email" name="email" placeholder="Email">
+            <textarea name="message" placeholder="Сообщение"></textarea>
             <button type="submit" class="btn">Отправить</button>
         </form>
         <div class="contact-info">
@@ -127,17 +127,17 @@
         <span class="close">&times;</span>
         <h2>Заказать консультацию</h2>
         <form id="consult-form">
-            <input type="text" placeholder="Ваше имя" required>
-            <input type="tel" placeholder="Телефон" required>
+            <input type="text" name="userName" placeholder="Ваше имя" required>
+            <input type="tel" name="rawPhoneNumber" placeholder="Телефон" required>
             <button type="submit" class="btn">Отправить</button>
         </form>
     </div>
 </div>
 
-<div id="notification" class="notification hidden">
+<div id="notification-modal" class="notification-modal">
     <div class="notification-content">
-        <span id="notification-message"></span>
-        <button id="notification-close">×</button>
+        <div id="notification-message"></div>
+        <button id="notification-close" class="notification-close">OK</button>
     </div>
 </div>
 

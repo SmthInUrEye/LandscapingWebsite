@@ -18,7 +18,7 @@ public WebMvcConfigurer corsConfigurer() {
         @Override
         public void addCorsMappings(CorsRegistry registry) {
             registry.addMapping("/api/**")
-             .allowedOrigins("http://localhost:63342") // Добавьте ваш фронтенд-URL
+             .allowedOrigins("http://localhost:63342")
              .allowedMethods("GET", "POST", "PUT", "DELETE")
              .allowCredentials(true);
         }
