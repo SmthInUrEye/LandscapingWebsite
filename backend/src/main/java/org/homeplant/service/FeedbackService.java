@@ -38,15 +38,18 @@ public class FeedbackService {
 
             // Проверка уникальности телефона
             if (repository.existsByUserMobileNumber(normalizedPhone)) {
-                throw new DuplicatePhoneException("Номер уже используется");
+                throw new DuplicatePhoneException("Заявка уже оставлена и обрабатывается!");
             }
 
             // Валидация и нормализация Email
-            String normalizedEmail = emailValidationService.normalizeAndValidate(request.getRawEmail());
+            String normalizedEmail = Optional.ofNullable(request.getRawEmail())
+             .filter(email -> !email.isBlank())
+             .map(email -> emailValidationService.normalizeAndValidate(email))
+             .orElse(null);
 
             // Проверка уникальности Email
-            if (repository.existsByUserEmail(normalizedEmail)) {
-                throw new DuplicateEmailException("Email уже используется");
+            if (normalizedEmail != null && repository.existsByUserEmail(normalizedEmail)) {
+                throw new DuplicateEmailException("Заявка уже оставлена и обрабатывается!");
             }
 
             // Создание сущности
@@ -63,9 +66,9 @@ public class FeedbackService {
             throw new InvalidPhoneException(ex.getMessage());
         } catch (DataIntegrityViolationException ex) {
             if (ex.getMessage().contains("user_email")) {
-                throw new DuplicateEmailException("Email уже используется", ex);
+                throw new DuplicateEmailException("Заявка уже оставлена и обрабатывается!", ex);
             } else if (ex.getMessage().contains("user_mobile_number")) {
-                throw new DuplicatePhoneException("Номер уже используется", ex);
+                throw new DuplicatePhoneException("Заявка уже оставлена и обрабатывается!", ex);
             }
             throw ex;
         }

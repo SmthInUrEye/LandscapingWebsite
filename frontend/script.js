@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // ====================== КОНСТАНТЫ И ПЕРЕМЕННЫЕ ======================
-    const API_URL = 'http://localhost:8080/api/consultation-tasks';
+    const API_URL_TASKS = 'http://localhost:8080/api/consultation-tasks';
+    const API_URL_FEEDBAKS = 'http://localhost:8080/api/feedbacks';
     const modal = document.getElementById('modal');
     const consultForm = document.getElementById('consult-form');
     const contactForm = document.getElementById('contact-form');
@@ -224,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
          try {
              // Отправка запроса
-             const response = await fetch(API_URL, {
+             const response = await fetch(API_URL_TASKS, {
                  method: 'POST',
                  headers: {
                      'Content-Type': 'application/json'
@@ -292,10 +293,111 @@ document.addEventListener('DOMContentLoaded', function() {
     function setupContactForm() {
         if (!contactForm) return;
 
-        contactForm.addEventListener('submit', function(e) {
+        contactForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            notifier.show('Спасибо за ваше сообщение! Мы свяжемся с вами в ближайшее время', 'success');
-            this.reset();
+            resetFormErrors();
+
+            // Получаем данные формы
+            const formData = {
+                userName: this.elements.userName.value.trim(),
+                rawPhoneNumber: this.elements.rawPhoneNumber.value.trim(),
+                email: this.elements.email.value.trim(),
+                message: this.elements.message.value.trim()
+            };
+
+            // Валидация на клиенте
+            let isValid = true;
+
+            if (!formData.userName) {
+                showInputError(this.elements.userName, 'Имя обязательно');
+                isValid = false;
+            }
+
+            if (!formData.rawPhoneNumber) {
+                showInputError(this.elements.rawPhoneNumber, 'Телефон обязателен');
+                isValid = false;
+            }
+
+            if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+                showInputError(this.elements.email, 'Некорректный формат email');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                notifier.show('Пожалуйста, заполните обязательные поля', 'error');
+                return;
+            }
+
+            // Показываем состояние загрузки
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Отправка...';
+
+            // Настройка таймаута (10 секунд)
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+            try {
+                const response = await fetch(API_URL_FEEDBAKS, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userName: formData.userName,
+                        rawPhoneNumber: formData.rawPhoneNumber,
+                        rawEmail: formData.email || null,
+                        userRequestText: formData.message
+                    }),
+                    signal: controller.signal // Подключаем AbortController
+                });
+
+                clearTimeout(timeoutId); // Очищаем таймаут при успешном ответе
+
+                const contentType = response.headers.get('content-type');
+                let responseData;
+
+                // Обрабатываем разные форматы ответа
+                if (contentType && contentType.includes('application/json')) {
+                    responseData = await response.json();
+                } else {
+                    const text = await response.text();
+                    try {
+                        responseData = JSON.parse(text); // Пробуем распарсить как JSON
+                    } catch {
+                        responseData = { message: text }; // Используем текст как сообщение
+                    }
+                }
+
+                if (response.ok) {
+                    notifier.show('Сообщение отправлено!', 'success');
+                    this.reset();
+                } else {
+                    if (responseData.errors) {
+                        Object.entries(responseData.errors).forEach(([field, message]) => {
+                            const input = this.elements[field];
+                            if (input) showInputError(input, message);
+                        });
+                    }
+                    notifier.show(responseData.message || `Ошибка: ${response.status}`, 'error');
+                }
+
+            } catch (error) {
+                clearTimeout(timeoutId); // Очищаем таймаут при ошибке
+
+                if (error.name === 'AbortError') {
+                    notifier.show('Превышено время ожидания ответа от сервера', 'error');
+                } else if (error instanceof TypeError) {
+                    notifier.show('Ошибка сети. Проверьте подключение', 'error');
+                } else {
+                    console.error('Ошибка:', error);
+                    notifier.show('Произошла непредвиденная ошибка', 'error');
+                }
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+            }
         });
     }
 
