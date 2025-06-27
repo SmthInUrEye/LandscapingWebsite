@@ -38,7 +38,7 @@ public class ConsultationTaskService {
 
             // Проверка уникальности
             if (repository.existsByUserMobileNumber(normalizedPhone)) {
-                throw new DuplicatePhoneException("Номер уже используется");
+                throw new DuplicatePhoneException("Заявка уже оставлена и обрабатывается!");
             }
 
             // Создание сущности
@@ -52,7 +52,7 @@ public class ConsultationTaskService {
         } catch (IllegalArgumentException ex) {
             throw new InvalidPhoneException(ex.getMessage());
         } catch (DataIntegrityViolationException ex) {
-            throw new DuplicatePhoneException("Номер уже используется", ex);
+            throw new DuplicatePhoneException("Заявка уже оставлена и обрабатывается!", ex);
         }
     }
 
@@ -65,7 +65,6 @@ public class ConsultationTaskService {
          .orElseThrow(() -> new EntityNotFoundException("Задача не найдена"));
     }
 
-    // Остальные методы без изменений
     @Transactional(readOnly = true)
     public Optional<ConsultationTask> findById(UUID id) {
         return repository.findById(id);
