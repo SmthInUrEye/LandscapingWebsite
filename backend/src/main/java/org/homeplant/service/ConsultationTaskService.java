@@ -65,7 +65,6 @@ public class ConsultationTaskService {
          .orElseThrow(() -> new EntityNotFoundException("Задача не найдена"));
     }
 
-    // Остальные методы без изменений
     @Transactional(readOnly = true)
     public Optional<ConsultationTask> findById(UUID id) {
         return repository.findById(id);
