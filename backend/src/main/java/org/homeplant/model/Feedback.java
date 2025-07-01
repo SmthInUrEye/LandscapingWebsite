@@ -4,7 +4,9 @@ package org.homeplant.model;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -23,6 +25,10 @@ public class Feedback {
 
     @Column(name = "user_text", length = 2000)
     private String userRequestText;
+
+    @Column(name = "created_at", updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     public Feedback(String userName, String userEmail, String userMobileNumber, String userRequestText) {
         this.userName = userName;
@@ -68,6 +74,10 @@ public class Feedback {
 
     public UUID getId() {
         return id;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
     @Override
