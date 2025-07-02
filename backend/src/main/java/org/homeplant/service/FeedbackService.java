@@ -6,6 +6,7 @@ import org.homeplant.exception.InvalidPhoneException;
 import org.homeplant.model.Feedback;
 import org.homeplant.model.FeedbackRequest;
 import org.homeplant.repository.FeedbackRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,11 +21,14 @@ public class FeedbackService {
     private final FeedbackRepository repository;
     private final PhoneValidationService phoneValidationService;
     private final EmailValidationService emailValidationService;
+    private final ApplicationEventPublisher eventPublisher;
+    private final Object lock = new Object();
 
-    public FeedbackService(FeedbackRepository repository, PhoneValidationService phoneValidationService, EmailValidationService emailValidationService) {
+    public FeedbackService(FeedbackRepository repository, PhoneValidationService phoneValidationService, EmailValidationService emailValidationService, ApplicationEventPublisher eventPublisher) {
         this.repository = repository;
         this.phoneValidationService = phoneValidationService;
         this.emailValidationService = emailValidationService;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -59,6 +63,10 @@ public class FeedbackService {
              normalizedPhone,
              request.getUserRequestText()
             );
+
+            synchronized (lock) {
+                eventPublisher.publishEvent(feedback);
+            }
 
             return repository.save(feedback);
 

@@ -6,6 +6,7 @@ import org.homeplant.exception.InvalidPhoneException;
 import org.homeplant.model.ConsultationTask;
 import org.homeplant.model.ConsultationTaskRequest;
 import org.homeplant.repository.ConsultationTaskRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,13 +20,16 @@ public class ConsultationTaskService {
 
     private final ConsultationTaskRepository repository;
     private final PhoneValidationService phoneValidationService;
+    private final ApplicationEventPublisher eventPublisher;
+    private final Object lock = new Object();
 
     public ConsultationTaskService(
      ConsultationTaskRepository repository,
-     PhoneValidationService phoneValidationService
+     PhoneValidationService phoneValidationService, ApplicationEventPublisher eventPublisher
     ) {
         this.repository = repository;
         this.phoneValidationService = phoneValidationService;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -46,6 +50,10 @@ public class ConsultationTaskService {
              request.getUserName().trim(),
              normalizedPhone
             );
+
+            synchronized (lock) {
+                eventPublisher.publishEvent(task);
+            }
 
             return repository.save(task);
 
