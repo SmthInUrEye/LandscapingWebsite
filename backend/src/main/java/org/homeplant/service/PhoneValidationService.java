@@ -26,7 +26,6 @@ public class PhoneValidationService {
                   (regionCode != null ? regionCode : "неизвестный")
                 );
             }
-
             return PHONE_UTIL.format(number, PhoneNumberUtil.PhoneNumberFormat.E164);
 
         } catch (NumberParseException e) {

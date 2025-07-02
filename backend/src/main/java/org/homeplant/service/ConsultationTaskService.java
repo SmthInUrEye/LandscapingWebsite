@@ -21,6 +21,7 @@ public class ConsultationTaskService {
     private final ConsultationTaskRepository repository;
     private final PhoneValidationService phoneValidationService;
     private final ApplicationEventPublisher eventPublisher;
+    private final Object lock = new Object();
 
     public ConsultationTaskService(
      ConsultationTaskRepository repository,
@@ -50,7 +51,10 @@ public class ConsultationTaskService {
              normalizedPhone
             );
 
-            //eventPublisher.publishEvent(task);
+            synchronized (lock) {
+                eventPublisher.publishEvent(task);
+            }
+
             return repository.save(task);
 
         } catch (IllegalArgumentException ex) {

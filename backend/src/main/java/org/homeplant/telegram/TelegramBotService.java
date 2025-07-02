@@ -19,8 +19,11 @@ import org.homeplant.service.ConsultationTaskService;
 import org.homeplant.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -51,10 +54,12 @@ public class TelegramBotService implements UpdatesListener {
         this.feedbackRepository = feedbackRepository;
     }
 
+    @Autowired
+    private PlatformTransactionManager transactionManager;
+
     @PostConstruct
     public void init() {
         telegramBot.setUpdatesListener(this);
-
     }
 
     @Override
@@ -70,11 +75,33 @@ public class TelegramBotService implements UpdatesListener {
     }
 
     private void processUpdate(Update update) {
-        if (update.message() != null && update.message().chat().id().equals(adminChatId)) {
-            handleCommand(update.message());
-        } else if (update.callbackQuery() != null && update.callbackQuery().message().chat().id().equals(adminChatId)) {
+
+        if (update.callbackQuery() != null) {
             handleCallback(update.callbackQuery());
+            return;
         }
+
+        Message message = update.message();
+        if (message == null) {
+            return;
+        }
+
+        Long chatId = message.chat().id();
+
+        if (chatId.equals(adminChatId)) {
+            handleCommand(message);
+        } else {
+            sendNonAdminResponse(chatId);
+        }
+    }
+
+    private void sendNonAdminResponse(Long chatId) {
+        telegramBot.execute(new SendMessage(chatId, """
+         Этот бот предназначен для сотрудников компании.
+         Ваш chat_id: `%d`
+         
+         Для доступа к функциям бота обратитесь к разработчику, сообщив ему ваш chat_id
+         """.formatted(chatId)));
     }
 
     private void handleCommand(Message message) {
@@ -86,11 +113,11 @@ public class TelegramBotService implements UpdatesListener {
                 sendWelcomeMessage();
                 break;
             case "/tasks":
-            case "📋 Последние заявки":
+            case "📋 Заявки":
                 sendRecentConsultations();
                 break;
             case "/feedbacks":
-            case "📝 Последние отзывы":
+            case "📝 Обращения":
                 sendRecentFeedbacks();
                 break;
             default:
@@ -99,18 +126,18 @@ public class TelegramBotService implements UpdatesListener {
     }
 
     // Уведомления о новых данных
-    @EventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleNewConsultationTask(ConsultationTask task) {
-        String message = "✉️ *Новая заявка!*\n" + formatConsultation(task);
+        String message = "\uD83D\uDE80 *НОВАЯ ЗАЯВКА* \uD83D\uDE80\n" + formatConsultation(task);
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(
          new InlineKeyboardButton("❌ Удалить").callbackData("delete_consult_" + task.getId())
         );
         sendMessage(message, keyboard);
     }
 
-    @EventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleNewFeedback(Feedback feedback) {
-        String message = "✉️ *Новый отзыв!*\n" + formatFeedback(feedback);
+        String message = "\uD83C\uDF1F *НОВОЕ ОБРАЩЕНИЕ* \uD83C\uDF1F\n" + formatFeedback(feedback);
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(
          new InlineKeyboardButton("❌ Удалить").callbackData("delete_feedback_" + feedback.getId())
         );
@@ -120,12 +147,16 @@ public class TelegramBotService implements UpdatesListener {
     // Основные методы работы с ботом
     private void sendWelcomeMessage() {
         String text = """
-        🌿 Бот управления заявками HomePlant
-        
-        Доступные команды:
-        /tasks - Последние заявки
-        /feedbacks - Последние отзывы
-        """;
+         🌿 Бот управления заявками HomePlant
+         
+         Доступные команды бота:
+         
+         /tasks - Показывает все оставленные на сайте заявки (имя заказчика и телефон)
+         
+         /feedbacks - Показывает все обращения (имя, телефон, email и текст обращения от заказчика)
+         
+         При поступлении новых заявков или обращений, я сразу опубликую их в чат, чтобы вы могли своевременно отслеживать заказы
+         """;
         sendMessage(text, getMainMenuKeyboard());
     }
 
@@ -150,7 +181,7 @@ public class TelegramBotService implements UpdatesListener {
         List<Feedback> feedbacks = feedbackRepository.findAll();
 
         if (feedbacks.isEmpty()) {
-            sendMessage("Нет отзывов", getMainMenuKeyboard());
+            sendMessage("Нет обращений", getMainMenuKeyboard());
             return;
         }
 
@@ -166,18 +197,21 @@ public class TelegramBotService implements UpdatesListener {
     // Обработка callback-ов
     private void handleCallback(CallbackQuery callback) {
         String data = callback.data();
+        TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
 
         try {
-            if (data.startsWith("delete_consult_")) {
-                UUID id = UUID.fromString(data.substring(15));
-                consultationTaskService.deleteTask(id);
-                sendMessage("✅ Заявка удалена", getMainMenuKeyboard());
-            } else if (data.startsWith("delete_feedback_")) {
-                UUID id = UUID.fromString(data.substring(16));
-                feedbackService.deleteFeedback(id);
-                sendMessage("✅ Отзыв удалён", getMainMenuKeyboard());
-            }
-
+            transactionTemplate.execute(status -> {
+                if (data.startsWith("delete_consult_")) {
+                    UUID id = UUID.fromString(data.substring(15));
+                    consultationTaskService.deleteTask(id);
+                    sendMessage("✅ Заявка удалена", getMainMenuKeyboard());
+                } else if (data.startsWith("delete_feedback_")) {
+                    UUID id = UUID.fromString(data.substring(16));
+                    feedbackService.deleteFeedback(id);
+                    sendMessage("✅ Обращение удалёно", getMainMenuKeyboard());
+                }
+                return null;
+            });
             telegramBot.execute(new DeleteMessage(adminChatId, callback.message().messageId()));
         } catch (Exception e) {
             sendMessage("❌ Ошибка: " + e.getMessage());
@@ -187,7 +221,7 @@ public class TelegramBotService implements UpdatesListener {
     // Вспомогательные методы
     private ReplyKeyboardMarkup getMainMenuKeyboard() {
         return new ReplyKeyboardMarkup(
-         new String[]{"📋 Последние заявки", "📝 Последние отзывы"},
+         new String[]{"📋 Заявки", "📝 Обращения"},
          new String[]{"🆘 Помощь"}
         ).resizeKeyboard(true);
     }
@@ -207,10 +241,10 @@ public class TelegramBotService implements UpdatesListener {
     private String formatConsultation(ConsultationTask task) {
         return String.format(
          """
-         📅 Дата: %s
-         👤 Имя: %s
-         📞 Телефон: %s
-         """,
+          📅 Дата: %s
+          👤 Имя: %s
+          📞 Телефон: %s
+          """,
          task.getCreatedAt().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
          task.getUserName(),
          task.getUserMobileNumber());
@@ -219,12 +253,12 @@ public class TelegramBotService implements UpdatesListener {
     private String formatFeedback(Feedback feedback) {
         return String.format(
          """
-         📅 Дата: %s
-         👤 Имя: %s
-         📞 Телефон: %s
-         ✉️ Email: %s
-         📝 Текст: %s
-         """,
+          📅 Дата: %s
+          👤 Имя: %s
+          📞 Телефон: %s
+          ✉️ Email: %s
+          📝 Текст: %s
+          """,
          feedback.getCreatedAt().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
          feedback.getUserName(),
          feedback.getUserMobileNumber(),

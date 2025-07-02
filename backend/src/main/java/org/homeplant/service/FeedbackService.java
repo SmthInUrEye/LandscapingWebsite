@@ -22,6 +22,7 @@ public class FeedbackService {
     private final PhoneValidationService phoneValidationService;
     private final EmailValidationService emailValidationService;
     private final ApplicationEventPublisher eventPublisher;
+    private final Object lock = new Object();
 
     public FeedbackService(FeedbackRepository repository, PhoneValidationService phoneValidationService, EmailValidationService emailValidationService, ApplicationEventPublisher eventPublisher) {
         this.repository = repository;
@@ -63,7 +64,10 @@ public class FeedbackService {
              request.getUserRequestText()
             );
 
-            //eventPublisher.publishEvent(feedback);
+            synchronized (lock) {
+                eventPublisher.publishEvent(feedback);
+            }
+
             return repository.save(feedback);
 
         } catch (IllegalArgumentException ex) {
