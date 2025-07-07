@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  # Бекенд
+  backend:
+    build: ./backend
+    container_name: landscaping-backend
+    environment:
+      # Настройки приложения
+      SPRING_APPLICATION_NAME: "LandScaping WebSite"
+
+      # Подключение к локальной БД на хосте
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/LandScaping
+      SPRING_DATASOURCE_USERNAME: SiteAdmin
+      SPRING_DATASOURCE_PASSWORD: chocolatefrog
+
+      # Настройки Liquibase
+      SPRING_LIQUIBASE_ENABLED: "true"
+      SPRING_LIQUIBASE_CHANGE_LOG: "classpath:/liquibase/db.changelog-master.yaml"
+
+      # Telegram Bot
+      TELEGRAM_BOT_TOKEN:
+      TELEGRAM_ADMIN_CHAT_ID:
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+  # Фронтенд
+  frontend:
+    build: ./frontend
+    container_name: landscaping-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend

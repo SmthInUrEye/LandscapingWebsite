@@ -1,7 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
     // ====================== КОНСТАНТЫ И ПЕРЕМЕННЫЕ ======================
-    const API_URL_TASKS = 'http://localhost:8080/api/consultation-tasks';
-    const API_URL_FEEDBAKS = 'http://localhost:8080/api/feedbacks';
+
+    //Для локального запуска
+    //const API_URL_TASKS = 'http://localhost:8080/api/consultation-tasks';
+    //const API_URL_FEEDBAKS = 'http://localhost:8080/api/feedbacks';
+
+    //Запуск через контейнер
+    const API_URL_TASKS = 'http://backend:8080/api/consultation-tasks';
+    const API_URL_FEEDBAKS = 'http://backend:8080/api/feedbacks';
+
     const modal = document.getElementById('modal');
     const consultForm = document.getElementById('consult-form');
     const contactForm = document.getElementById('contact-form');

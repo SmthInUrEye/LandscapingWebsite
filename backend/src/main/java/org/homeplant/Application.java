@@ -18,7 +18,8 @@ public WebMvcConfigurer corsConfigurer() {
         @Override
         public void addCorsMappings(CorsRegistry registry) {
             registry.addMapping("/api/**")
-             .allowedOrigins("http://localhost:63342")
+             .allowedOrigins("http://localhost:63342",
+              "http://localhost:80")
              .allowedMethods("GET", "POST", "PUT", "DELETE")
              .allowCredentials(true);
         }

@@ -5,10 +5,10 @@ FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 # Копируем JAR-файл в контейнер
-COPY target/*.jar app.jar
+COPY target/LandScaping_WebSite-0.0.1-SNAPSHOT.jar app.jar
 
 # Открываем порт, который использует приложение
 EXPOSE 8080
 
 # Команда запуска приложения
-ENTRYPOINT ["java", "-jar", "LandScaping_WebSite-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
