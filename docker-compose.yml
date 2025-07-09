@@ -6,6 +6,7 @@ services:
     build: ./backend
     container_name: landscaping-backend
     environment:
+
       # Настройки приложения
       SPRING_APPLICATION_NAME: "LandScaping WebSite"
 
@@ -19,8 +20,8 @@ services:
       SPRING_LIQUIBASE_CHANGE_LOG: "classpath:/liquibase/db.changelog-master.yaml"
 
       # Telegram Bot
-      TELEGRAM_BOT_TOKEN: "7820786930:AAG0_ulQHOUtjN-mBLwov5LgtrR9hukyVhc"
-      TELEGRAM_ADMIN_CHAT_ID: "901981628"
+      TELEGRAM_BOT_TOKEN:
+      TELEGRAM_ADMIN_CHAT_ID:
     ports:
       - "8080:8080"
     restart: unless-stopped

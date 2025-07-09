@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
     //const API_URL_FEEDBAKS = 'http://localhost:8080/api/feedbacks';
 
     //Запуск через контейнер
-    const API_URL_TASKS = 'http://backend:8080/api/consultation-tasks';
-    const API_URL_FEEDBAKS = 'http://backend:8080/api/feedbacks';
+    const API_URL_TASKS = 'api/consultation-tasks';
+    const API_URL_FEEDBAKS = 'api/feedbacks';
 
     const modal = document.getElementById('modal');
     const consultForm = document.getElementById('consult-form');

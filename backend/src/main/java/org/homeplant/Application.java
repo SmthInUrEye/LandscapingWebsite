@@ -18,10 +18,17 @@ public WebMvcConfigurer corsConfigurer() {
         @Override
         public void addCorsMappings(CorsRegistry registry) {
             registry.addMapping("/api/**")
-             .allowedOrigins("http://localhost:63342",
-              "http://localhost:80")
-             .allowedMethods("GET", "POST", "PUT", "DELETE")
-             .allowCredentials(true);
+             .allowedOrigins(
+             "http://localhost",          // Для фронта в Docker
+             "http://localhost:80",       // Альтернативный вариант
+             "http://localhost:63342",    // Для разработки в WebStorm
+             "http://127.0.0.1",          // IPv4 альтернатива
+             "http://frontend"            // Для обращения из других контейнеров
+            )
+             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+             .allowedHeaders("*")
+             .allowCredentials(true)
+             .maxAge(3600);
         }
     };
 }
