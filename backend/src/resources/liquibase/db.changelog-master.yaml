@@ -1,5 +1,0 @@
-databaseChangeLog:
-  - include:
-      file: liquibase/create-consultation-tasks-table.yaml
-  - include:
-      file: liquibase/create-feedbacks-table.yaml

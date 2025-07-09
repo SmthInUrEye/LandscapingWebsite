@@ -226,6 +226,8 @@ public class TelegramBotService implements UpdatesListener {
         ).resizeKeyboard(true);
     }
 
+    //Перегрузка методов для разных вариаций отправки обратной связи
+
     private void sendMessage(String text) {
         telegramBot.execute(new SendMessage(adminChatId, text));
     }
