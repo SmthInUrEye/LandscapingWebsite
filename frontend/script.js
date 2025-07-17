@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
              } else if (error instanceof SyntaxError) {
                  notifier.show('Ошибка обработки ответа сервера', 'error');
              } else if (error instanceof TypeError) {
-                 notifier.show('Проблемы с подключением. Проверьте интернет', 'error');
+                 notifier.show('Проблемы с подключением. Проверьте интернет!', 'error');
              } else {
                  notifier.show('Произошла непредвиденная ошибка', 'error');
              }
