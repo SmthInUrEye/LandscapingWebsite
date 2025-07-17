@@ -4,6 +4,8 @@ services:
   # Бекенд
   backend:
     build: ./backend
+    env_file:
+      - .env
     container_name: landscaping-backend
     environment:
 
