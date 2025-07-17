@@ -34,17 +34,27 @@ jobs:
       - name: Debug tar test
         run: tar czf test.tar.gz docker-compose.yml backend frontend && tar -tvf test.tar.gz
 
-      - name: Copy files to server (exclude .env)
+      - name: Pack files into archive
+        run: tar czf deploy.tar.gz docker-compose.yml backend frontend
+
+      - name: Copy archive to server
         uses: appleboy/scp-action@v0.1.7
         with:
-         host: ${{ secrets.SSH_HOST }}
-         username: ${{ secrets.SSH_USER }}
-         key: ${{ secrets.SSH_KEY }}
-         source: |
-           docker-compose.yml
-           backend
-           frontend
-         target: /home/user1
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: deploy.tar.gz
+          target: /home/user1
+
+      - name: Unpack archive on server
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /home/user1
+            tar xzf deploy.tar.gz
 
       - name: Deploy with Docker Compose
         uses: appleboy/ssh-action@v0.1.8
