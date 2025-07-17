@@ -11,17 +11,17 @@ services:
       SPRING_APPLICATION_NAME: "LandScaping WebSite"
 
       # Подключение к локальной БД на хосте
-      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/LandScaping
-      SPRING_DATASOURCE_USERNAME: SiteAdmin
-      SPRING_DATASOURCE_PASSWORD: chocolatefrog
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
 
       # Настройки Liquibase
       SPRING_LIQUIBASE_ENABLED: "true"
       SPRING_LIQUIBASE_CHANGE_LOG: "classpath:/liquibase/db.changelog-master.yaml"
 
       # Telegram Bot
-      TELEGRAM_BOT_TOKEN:
-      TELEGRAM_ADMIN_CHAT_ID:
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_ADMIN_CHAT_ID: ${TELEGRAM_ADMIN_CHAT_ID}
     ports:
       - "8080:8080"
     restart: unless-stopped
