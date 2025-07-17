@@ -24,6 +24,12 @@ jobs:
         run: |
           docker compose build
           docker compose push
+          
+      - name: Debug:list files
+        run: |
+          ls -la
+          ls -la backend
+          ls -la frontend
 
       - name: Copy files to server (exclude .env)
         uses: appleboy/scp-action@v0.1.7
