@@ -20,6 +20,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Create temporary .env file
+        run: |
+          echo "SPRING_DATASOURCE_URL=some_value" >> .env
+          echo "SPRING_DATASOURCE_USERNAME=some_user" >> .env
+          echo "SPRING_DATASOURCE_PASSWORD=some_password" >> .env
+          echo "TELEGRAM_BOT_TOKEN=some_token" >> .env
+          echo "TELEGRAM_ADMIN_CHAT_ID=some_id" >> .env
+
       - name: Build and push Docker images with Compose
         run: |
           docker compose build
