@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: v1.0-create-feedbacks-table
+      author: SmthInUrEye
+      changes:
+        - createTable:
+            tableName: feedbacks
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_email
+                  type: VARCHAR(255)
+              - column:
+                  name: user_mobile_number
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: user_text
+                  type: TEXT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: idx_feedbacks_email
+            tableName: feedbacks
+            columns:
+              - column:
+                  name: user_email
+            unique: false
