@@ -21,7 +21,7 @@ services:
 
       # Настройки Liquibase
       SPRING_LIQUIBASE_ENABLED: "true"
-      SPRING_LIQUIBASE_CHANGE_LOG: "classpath:/liquibase/db.changelog-master.yaml"
+      SPRING_LIQUIBASE_CHANGE_LOG: "classpath:liquibase/db.changelog-master.yaml"
 
       # Telegram Bot
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
