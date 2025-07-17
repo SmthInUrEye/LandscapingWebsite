@@ -31,6 +31,9 @@ jobs:
           ls -la backend
           ls -la frontend
 
+      - name: Debug tar test
+        run: tar czf test.tar.gz docker-compose.yml backend frontend && tar -tvf test.tar.gz
+
       - name: Copy files to server (exclude .env)
         uses: appleboy/scp-action@v0.1.7
         with:
