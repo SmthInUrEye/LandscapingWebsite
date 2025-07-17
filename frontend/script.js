@@ -1,7 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
     // ====================== КОНСТАНТЫ И ПЕРЕМЕННЫЕ ======================
-    const API_URL_TASKS = 'http://localhost:8080/api/consultation-tasks';
-    const API_URL_FEEDBAKS = 'http://localhost:8080/api/feedbacks';
+
+    //Для локального запуска
+    //const API_URL_TASKS = 'http://localhost:8080/api/consultation-tasks';
+    //const API_URL_FEEDBAKS = 'http://localhost:8080/api/feedbacks';
+
+    //Запуск через контейнер
+    const API_URL_TASKS = '/api/consultation-tasks';
+    const API_URL_FEEDBAKS = '/api/feedbacks';
+
     const modal = document.getElementById('modal');
     const consultForm = document.getElementById('consult-form');
     const contactForm = document.getElementById('contact-form');
@@ -279,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
              } else if (error instanceof SyntaxError) {
                  notifier.show('Ошибка обработки ответа сервера', 'error');
              } else if (error instanceof TypeError) {
-                 notifier.show('Проблемы с подключением. Проверьте интернет!', 'error');
+                 notifier.show('Проблемы с подключением. Проверьте интернет', 'error');
              } else {
                  notifier.show('Произошла непредвиденная ошибка', 'error');
              }
