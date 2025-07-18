@@ -20,6 +20,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Build JAR with Maven
+        working-directory: ./backend
+        run: mvn clean package -DskipTests
+
       - name: Create temporary .env file
         run: |
           echo "SPRING_DATASOURCE_URL=some_value" >> .env
