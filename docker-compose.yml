@@ -35,5 +35,7 @@ services:
     container_name: landscaping-frontend
     ports:
       - "80:80"
+    volumes:
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.con
     depends_on:
       - backend
