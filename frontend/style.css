@@ -429,7 +429,7 @@ footer {
  }
 
     .input_error {
-    color: #f44336
+    color: #f44336;
     font-size: 0.85rem;
     margin-top: 0.3rem;
     display: block;
@@ -438,16 +438,29 @@ footer {
     .input_error-style {
     border-color: #f44336 !important;}
 
+    .burger {
+        display: none;
+        font-size: 30px;
+        cursor: pointer;
+    }
 
 /* Адаптивность */
 @media (max-width: 768px) {
+    .burger {
+          display: block;
+      }
+
     header .container {
         flex-direction: column;
     }
 
     nav ul {
-        margin: 15px 0;
+        flex-direction: column;
+               display: none;
     }
+       nav ul.active {
+            display: flex;
+        }
 
     .hero {
         padding: 150px 0 80px;
