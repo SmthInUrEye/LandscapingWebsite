@@ -143,32 +143,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const portfolioItems = [
             {
-                           image: 'images/portfolio1.jpg',
+                           image: 'images/portfolio1.webp',
                            title: 'Небольшой сад в Подмосковье',
                            description: 'Ландшафтный дизайн и озеленение'
                        },
                        {
-                           image: 'images/portfolio2.jpg',
+                           image: 'images/portfolio2.webp',
                            title: 'Альпийский сад',
                            description: 'Оформление частного сада на участке'
                        },
                        {
-                           image: 'images/portfolio3.jpg',
+                           image: 'images/portfolio3.webp',
                            title: 'Оформление участка по вашим предложениям',
                            description: 'Подборка деревьев и растений на ваш вкус'
                        },
                        {
-                           image: 'images/portfolio4.jpg',
+                           image: 'images/portfolio4.webp',
                            title: 'Облагораживание территории',
                            description: 'Посадка деревьев и кустарников'
                        },
                        {
-                           image: 'images/portfolio5.jpg',
+                           image: 'images/portfolio5.webp',
                            title: 'Большой ассортимент',
                            description: 'Только качественные растения'
                        },
                        {
-                           image: 'images/portfolio6.jpg',
+                           image: 'images/portfolio6.webp',
                            title: 'Деревья любых размеров',
                            description: 'Подберём растения под ваш участок'
                        }
@@ -439,9 +439,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupBurger() {
-    document.querySelector('.burger').addEventListener('click', () => {
-        document.querySelector('nav ul').classList.toggle('active');
-    });
+    const burger = document.querySelector('.burger');
+       if (!burger) return;
+
+       burger.addEventListener('click', () => {
+           document.querySelector('nav ul').classList.toggle('active');
+       });
     }
 
     // ====================== ИНИЦИАЛИЗАЦИЯ ======================
