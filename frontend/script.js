@@ -438,6 +438,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function setupBurger() {
+    document.querySelector('.burger').addEventListener('click', () => {
+        document.querySelector('nav ul').classList.toggle('active');
+    });
+    }
+
     // ====================== ИНИЦИАЛИЗАЦИЯ ======================
     function init() {
         setupModal();
@@ -446,6 +452,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setupContactForm();
         setupSmoothScroll();
         setupStickyHeader();
+        setupBurger();
     }
 
     init();
