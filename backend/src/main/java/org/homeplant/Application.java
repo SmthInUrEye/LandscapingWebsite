@@ -19,7 +19,9 @@ public WebMvcConfigurer corsConfigurer() {
         public void addCorsMappings(CorsRegistry registry) {
             registry.addMapping("/api/**")
              .allowedOrigins("http://localhost")
-             .allowedMethods("GET", "POST", "PUT", "DELETE");
+             .allowedMethods("GET", "POST", "PUT", "DELETE")
+             .allowedHeaders("*")
+             .allowCredentials(false);
         }
     };
 }
