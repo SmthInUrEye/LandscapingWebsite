@@ -23,52 +23,52 @@ import java.util.UUID;
 @RequestMapping("/api/feedbacks")
 public class FeedbackController {
 
-    private final FeedbackService service;
+private final FeedbackService service;
 
-    public FeedbackController(FeedbackService service) {
-        this.service = service;
+public FeedbackController(FeedbackService service) {
+    this.service = service;
+}
+
+@PostMapping
+public ResponseEntity<?> createFeedback(@Valid @RequestBody FeedbackRequest request) {
+    try {
+        Feedback feedback = service.createFeedback(request);
+
+        URI location = ServletUriComponentsBuilder
+                        .fromCurrentRequest()
+                        .path("/{id}")
+                        .buildAndExpand(feedback.getId())
+                        .toUri();
+
+        return ResponseEntity.created(location).body(feedback);
+
+    } catch (InvalidPhoneException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    } catch (DuplicatePhoneException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    } catch (DuplicateEmailException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
+}
 
-    @PostMapping
-    public ResponseEntity<?> createFeedback(@Valid @RequestBody FeedbackRequest request) {
-        try {
-            Feedback feedback = service.createFeedback(request);
+@GetMapping("/{id}")
+public ResponseEntity<Feedback> getFeedback(@PathVariable UUID id) {
+    return service.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+}
 
-            URI location = ServletUriComponentsBuilder
-             .fromCurrentRequest()
-             .path("/{id}")
-             .buildAndExpand(feedback.getId())
-             .toUri();
+@GetMapping
+public List<Feedback> getAllFeedbacks() {
+    return service.findAll();
+}
 
-            return ResponseEntity.created(location).body(feedback);
-
-        } catch (InvalidPhoneException ex) {
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        } catch (DuplicatePhoneException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
-        } catch (DuplicateEmailException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
-        }
+@DeleteMapping("/{id}")
+public ResponseEntity<Void> deleteFeedback(@PathVariable UUID id) {
+    try {
+        service.deleteFeedback(id);
+        return ResponseEntity.noContent().build();
+    } catch (EntityNotFoundException ex) {
+        return ResponseEntity.notFound().build();
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Feedback> getFeedback(@PathVariable UUID id) {
-        return service.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping
-    public List<Feedback> getAllFeedbacks() {
-        return service.findAll();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFeedback(@PathVariable UUID id) {
-        try {
-            service.deleteFeedback(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+}
 
 }
