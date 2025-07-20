@@ -15,10 +15,9 @@ public class Application {
 
 public WebMvcConfigurer corsConfigurer() {
     return new WebMvcConfigurer() {
-        @Override
         public void addCorsMappings(CorsRegistry registry) {
             registry.addMapping("/api/**")
-             .allowedOrigins("http://localhost:63342")
+             .allowedOrigins("http://localhost")
              .allowedMethods("GET", "POST", "PUT", "DELETE")
              .allowCredentials(true);
         }
