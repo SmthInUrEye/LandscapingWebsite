@@ -47,23 +47,4 @@ public ResponseEntity<?> createTask(@Valid @RequestBody ConsultationTaskRequest 
     }
 }
 
-@GetMapping("/{id}")
-public ResponseEntity<ConsultationTask> getTask(@PathVariable UUID id) {
-    return service.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-}
-
-@GetMapping
-public List<ConsultationTask> getAllTasks() {
-    return service.findAll();
-}
-
-@DeleteMapping("/{id}")
-public ResponseEntity<Void> deleteTask(@PathVariable UUID id) {
-    try {
-        service.deleteTask(id);
-        return ResponseEntity.noContent().build();
-    } catch (EntityNotFoundException ex) {
-        return ResponseEntity.notFound().build();
-    }
-}
 }

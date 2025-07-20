@@ -51,24 +51,4 @@ public ResponseEntity<?> createFeedback(@Valid @RequestBody FeedbackRequest requ
     }
 }
 
-@GetMapping("/{id}")
-public ResponseEntity<Feedback> getFeedback(@PathVariable UUID id) {
-    return service.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-}
-
-@GetMapping
-public List<Feedback> getAllFeedbacks() {
-    return service.findAll();
-}
-
-@DeleteMapping("/{id}")
-public ResponseEntity<Void> deleteFeedback(@PathVariable UUID id) {
-    try {
-        service.deleteFeedback(id);
-        return ResponseEntity.noContent().build();
-    } catch (EntityNotFoundException ex) {
-        return ResponseEntity.notFound().build();
-    }
-}
-
 }
