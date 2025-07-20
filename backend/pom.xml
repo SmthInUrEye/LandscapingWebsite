@@ -107,7 +107,7 @@
                 </executions>
             </plugin>
 
-            <!-- Плагин для копирования зависимостей (опционально) -->
+            <!-- Плагин для копирования зависимостей -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
