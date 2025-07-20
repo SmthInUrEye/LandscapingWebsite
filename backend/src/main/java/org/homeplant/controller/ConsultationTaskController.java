@@ -21,49 +21,49 @@ import java.util.UUID;
 @RequestMapping("/api/consultation-tasks")
 public class ConsultationTaskController {
 
-    private final ConsultationTaskService service;
+private final ConsultationTaskService service;
 
-    public ConsultationTaskController(ConsultationTaskService service) {
-        this.service = service;
+public ConsultationTaskController(ConsultationTaskService service) {
+    this.service = service;
+}
+
+@PostMapping
+public ResponseEntity<?> createTask(@Valid @RequestBody ConsultationTaskRequest request) {
+    try {
+        ConsultationTask task = service.createTask(request);
+
+        URI location = ServletUriComponentsBuilder
+                        .fromCurrentRequest()
+                        .path("/{id}")
+                        .buildAndExpand(task.getId())
+                        .toUri();
+
+        return ResponseEntity.created(location).body(task);
+
+    } catch (InvalidPhoneException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    } catch (DuplicatePhoneException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
+}
 
-    @PostMapping
-    public ResponseEntity<?> createTask(@Valid @RequestBody ConsultationTaskRequest request) {
-        try {
-            ConsultationTask task = service.createTask(request);
+@GetMapping("/{id}")
+public ResponseEntity<ConsultationTask> getTask(@PathVariable UUID id) {
+    return service.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+}
 
-            URI location = ServletUriComponentsBuilder
-             .fromCurrentRequest()
-             .path("/{id}")
-             .buildAndExpand(task.getId())
-             .toUri();
+@GetMapping
+public List<ConsultationTask> getAllTasks() {
+    return service.findAll();
+}
 
-            return ResponseEntity.created(location).body(task);
-
-        } catch (InvalidPhoneException ex) {
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        } catch (DuplicatePhoneException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
-        }
+@DeleteMapping("/{id}")
+public ResponseEntity<Void> deleteTask(@PathVariable UUID id) {
+    try {
+        service.deleteTask(id);
+        return ResponseEntity.noContent().build();
+    } catch (EntityNotFoundException ex) {
+        return ResponseEntity.notFound().build();
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ConsultationTask> getTask(@PathVariable UUID id) {
-        return service.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping
-    public List<ConsultationTask> getAllTasks() {
-        return service.findAll();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable UUID id) {
-        try {
-            service.deleteTask(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+}
 }

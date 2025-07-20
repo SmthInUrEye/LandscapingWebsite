@@ -1,48 +1,60 @@
+
 package org.homeplant.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "consultation_tasks")
 public class ConsultationTask {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+@Id
+@GeneratedValue(strategy = GenerationType.AUTO)
+private UUID id;
 
-    @Column(nullable = false)
-    private String userName;
+@Column(nullable = false)
+private String userName;
 
-    @Column(name = "user_mobile_number", nullable = false, unique = true)
-    private String userMobileNumber;
+@Column(name = "user_mobile_number", nullable = false, unique = true)
+private String userMobileNumber;
 
-    public ConsultationTask() {
-    }
+@Column(name = "created_at", updatable = false)
+@CreationTimestamp
+private LocalDateTime createdAt;
 
-    public ConsultationTask(String userName, String userMobileNumber) {
-        this.userName = userName;
-        this.userMobileNumber = userMobileNumber;
-    }
+public ConsultationTask() {
+}
 
-    public UUID getId() {
-        return id;
-    }
+public ConsultationTask(String userName, String userMobileNumber) {
+    this.userName = userName;
+    this.userMobileNumber = userMobileNumber;
+}
 
-    public String getUserName() {
-        return userName;
-    }
+public UUID getId() {
+    return id;
+}
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+public String getUserName() {
+    return userName;
+}
 
-    public String getUserMobileNumber() {
-        return userMobileNumber;
-    }
+public void setUserName(String userName) {
+    this.userName = userName;
+}
 
-    public void setUserMobileNumber(String userMobileNumber) {
-        this.userMobileNumber = userMobileNumber;
-    }
+public String getUserMobileNumber() {
+    return userMobileNumber;
+}
+
+public void setUserMobileNumber(String userMobileNumber) {
+    this.userMobileNumber = userMobileNumber;
+}
+
+public LocalDateTime getCreatedAt() {
+    return createdAt;
+}
+
 }
