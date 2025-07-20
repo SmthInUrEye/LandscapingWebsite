@@ -18,10 +18,9 @@ public WebMvcConfigurer corsConfigurer() {
         @Override
         public void addCorsMappings(CorsRegistry registry) {
             registry.addMapping("/api/**")
-             .allowedOrigins("http://localhost")
-             .allowedMethods("GET", "POST", "PUT", "DELETE")
-             .allowedHeaders("*")
-             .allowCredentials(false);
+             .allowedOrigins("https://home-plant-mo.ru")
+             .allowedMethods("POST")
+             .allowedHeaders("*");
         }
     };
 }
