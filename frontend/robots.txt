@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://home-plant.ru/sitemap.xml
